@@ -1,0 +1,16 @@
+{
+  "metaMensual": 120,
+  "sheet": {
+    "tabName": "SIST_CAP_AT",
+    "colExpositor": "NOMBRE DEL EXPOSITOR (a)",
+    "colAno": "AÑO",
+    "colMes": "MES",
+    "modoConteo": "count_rows",
+    "colValor": null
+  },
+  "tecnicos": {
+    "MARIA": ["MARIA AUROLINA CCARHUASLLA OCHOA", "MARIA CCARHUASLLA"],
+    "ANDER": ["ANDER MICHEL MANCHAY SANTOS", "ANDER MANCHAY"],
+    "CRISTHIAN": ["CRISTHIAN JUNIOR CORREA ALVAREZ", "CRISTHIAN CORREA"]
+  }
+}

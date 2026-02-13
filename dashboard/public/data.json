@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2025-01-01T00:00:00.000Z",
+  "metaMensual": 120,
+  "currentMonth": "2025-01",
+  "current": {
+    "mk": "2025-01",
+    "total": 0,
+    "cumplidas": 0,
+    "noCumplidas": 3,
+    "tecnicos": [
+      { "tecnico": "MARIA", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" },
+      { "tecnico": "ANDER", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" },
+      { "tecnico": "CRISTHIAN", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" }
+    ]
+  },
+  "series": []
+}

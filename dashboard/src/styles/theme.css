@@ -1,0 +1,29 @@
+:root {
+  --bg: #f0f2f5;
+  --card-bg: #ffffff;
+  --primary: #1a73e8;
+  --success: #34a853;
+  --warning: #ea4335;
+  --orange: #ff7300;
+  --text: #202124;
+  --text-secondary: #5f6368;
+  --border: #dadce0;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
