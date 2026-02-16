@@ -8,6 +8,7 @@
     "modoConteo": "count_rows",
     "colValor": null
   },
+  "seriesDesde": "2026-01",
   "tecnicos": {
     "MARIA": ["MARIA AUROLINA CCARHUASLLA OCHOA", "MARIA CCARHUASLLA"],
     "ANDER": ["ANDER MICHEL MANCHAY SANTOS", "ANDER MANCHAY"],

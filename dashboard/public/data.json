@@ -1,17 +1,54 @@
 {
-  "generatedAt": "2025-01-01T00:00:00.000Z",
+  "generatedAt": "2026-02-15T04:07:33.185Z",
   "metaMensual": 120,
-  "currentMonth": "2025-01",
+  "currentMonth": "2026-02",
   "current": {
-    "mk": "2025-01",
-    "total": 0,
+    "mk": "2026-02",
+    "total": 44,
     "cumplidas": 0,
     "noCumplidas": 3,
     "tecnicos": [
-      { "tecnico": "MARIA", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" },
-      { "tecnico": "ANDER", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" },
-      { "tecnico": "CRISTHIAN", "realizado": 0, "meta": 120, "balance": -120, "pct": 0, "estado": "OBSERVADO", "accion": "RETENER PAGO" }
+      {
+        "tecnico": "MARIA",
+        "realizado": 37,
+        "meta": 120,
+        "balance": -83,
+        "pct": 0.31,
+        "estado": "OBSERVADO",
+        "accion": "RETENER PAGO"
+      },
+      {
+        "tecnico": "ANDER",
+        "realizado": 0,
+        "meta": 120,
+        "balance": -120,
+        "pct": 0,
+        "estado": "OBSERVADO",
+        "accion": "RETENER PAGO"
+      },
+      {
+        "tecnico": "CRISTHIAN",
+        "realizado": 7,
+        "meta": 120,
+        "balance": -113,
+        "pct": 0.06,
+        "estado": "OBSERVADO",
+        "accion": "RETENER PAGO"
+      }
     ]
   },
-  "series": []
+  "series": [
+    {
+      "month": "2026-01",
+      "MARIA": 55,
+      "ANDER": 71,
+      "CRISTHIAN": 82
+    },
+    {
+      "month": "2026-02",
+      "MARIA": 37,
+      "ANDER": 0,
+      "CRISTHIAN": 7
+    }
+  ]
 }

@@ -3,6 +3,7 @@
 // Lee Google Sheet privado vía Service Account, agrega por AÑO+MES y técnico,
 // y genera public/data.json SOLO con agregados (nunca filas crudas).
 
+import 'dotenv/config';
 import { google } from 'googleapis';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -117,9 +118,11 @@ function processRows(rows) {
     throw new Error('No se encontraron filas válidas con técnicos conocidos.');
   }
 
-  // Series ordenadas cronológicamente
+  // Series ordenadas cronológicamente, filtradas por seriesDesde
+  const desde = CONFIG.seriesDesde ?? null;
   const sortedMonths = Object.keys(monthly).sort();
-  const series = sortedMonths.map(mk => {
+  const filteredMonths = desde ? sortedMonths.filter(mk => mk >= desde) : sortedMonths;
+  const series = filteredMonths.map(mk => {
     const entry = { month: mk };
     for (const t of TECNICO_KEYS) entry[t] = monthly[mk][t] ?? 0;
     return entry;
