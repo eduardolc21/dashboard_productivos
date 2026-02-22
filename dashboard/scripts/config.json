@@ -1,5 +1,4 @@
 {
-  "metaMensual": 120,
   "sheet": {
     "tabName": "SIST_CAP_AT",
     "colExpositor": "NOMBRE DEL EXPOSITOR (a)",
@@ -13,5 +12,10 @@
     "MARIA": ["MARIA AUROLINA CCARHUASLLA OCHOA", "MARIA CCARHUASLLA"],
     "ANDER": ["ANDER MICHEL MANCHAY SANTOS", "ANDER MANCHAY"],
     "CRISTHIAN": ["CRISTHIAN JUNIOR CORREA ALVAREZ", "CRISTHIAN CORREA"]
+  },
+  "metas": {
+    "MARIA":     { "2026-01": 50,  "2026-02": 150 },
+    "ANDER":     { "2026-01": 70,  "2026-02": 107 },
+    "CRISTHIAN": { "2026-01": 80,  "2026-02": 105 }
   }
 }

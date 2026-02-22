@@ -1,4 +1,4 @@
-export default function KPICards({ current, metaMensual }) {
+export default function KPICards({ current }) {
   return (
     <div className="kpi-grid">
       <div className="kpi-card">
@@ -6,8 +6,8 @@ export default function KPICards({ current, metaMensual }) {
         <div className="value primary">{current.total}</div>
       </div>
       <div className="kpi-card">
-        <div className="label">Meta Mensual</div>
-        <div className="value">{metaMensual}</div>
+        <div className="label">Meta Total del Mes</div>
+        <div className="value">{current.totalMeta}</div>
       </div>
       <div className="kpi-card">
         <div className="label">Metas Cumplidas</div>

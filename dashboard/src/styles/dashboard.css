@@ -68,56 +68,111 @@
   margin-bottom: 16px;
 }
 
-/* ── Payment Status ─────────────────────────────────────────────────── */
-.payment-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+/* ── Chart Tooltip ─────────────────────────────────────────────────── */
+.chart-tooltip {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  min-width: 220px;
 }
 
-.payment-card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
-  border-left: 4px solid var(--border);
-}
-
-.payment-card.ok        { border-left-color: var(--success); }
-.payment-card.observado { border-left-color: var(--warning); }
-
-.payment-card .tech-name {
+.chart-tooltip-title {
   font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
 }
 
-.payment-card .stats {
+.chart-tooltip-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.chart-tooltip-name {
+  font-weight: 700;
+  font-size: 12px;
+  min-width: 75px;
+}
+
+.chart-tooltip-values {
+  font-size: 12px;
+  color: var(--text-secondary);
+  min-width: 55px;
+}
+
+.chart-tooltip-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.chart-tooltip-badge.ok   { background: #e6f4ea; color: var(--success); }
+.chart-tooltip-badge.fail { background: #fce8e6; color: var(--warning); }
+
+/* ── Evolution Summary ──────────────────────────────────────────────── */
+.evolution-summary {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.evolution-summary h3 {
   font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.evolution-month {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.evolution-month:last-child {
+  border-bottom: none;
+}
+
+.evolution-month-label {
+  font-weight: 600;
+  font-size: 13px;
+  min-width: 90px;
   color: var(--text-secondary);
 }
 
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #e8eaed;
-  border-radius: 4px;
-  overflow: hidden;
+.evolution-techs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.progress-bar .fill {
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.4s ease;
+.evolution-item {
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.fill.success { background: var(--success); }
-.fill.warning { background: var(--warning); }
+.evolution-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
 
+.evolution-badge.ok   { background: #e6f4ea; color: var(--success); }
+.evolution-badge.fail { background: #fce8e6; color: var(--warning); }
+
+/* ── Badges (shared) ───────────────────────────────────────────────── */
 .badge {
   display: inline-block;
   padding: 4px 12px;
@@ -128,23 +183,6 @@
 
 .badge.pago-ok    { background: #e6f4ea; color: var(--success); }
 .badge.observado  { background: #fce8e6; color: var(--warning); }
-
-.payment-card .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.payment-card .accion {
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.payment-card .pct-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
 
 /* ── Table ──────────────────────────────────────────────────────────── */
 .table-container {

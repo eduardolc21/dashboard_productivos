@@ -1,37 +1,37 @@
 {
-  "generatedAt": "2026-02-15T04:07:33.185Z",
-  "metaMensual": 120,
+  "generatedAt": "2026-02-21T22:50:44.870Z",
   "currentMonth": "2026-02",
   "current": {
     "mk": "2026-02",
-    "total": 44,
+    "total": 72,
+    "totalMeta": 362,
     "cumplidas": 0,
     "noCumplidas": 3,
     "tecnicos": [
       {
         "tecnico": "MARIA",
         "realizado": 37,
-        "meta": 120,
-        "balance": -83,
-        "pct": 0.31,
+        "meta": 150,
+        "balance": -113,
+        "pct": 0.25,
         "estado": "OBSERVADO",
         "accion": "RETENER PAGO"
       },
       {
         "tecnico": "ANDER",
-        "realizado": 0,
-        "meta": 120,
-        "balance": -120,
-        "pct": 0,
+        "realizado": 28,
+        "meta": 107,
+        "balance": -79,
+        "pct": 0.26,
         "estado": "OBSERVADO",
         "accion": "RETENER PAGO"
       },
       {
         "tecnico": "CRISTHIAN",
         "realizado": 7,
-        "meta": 120,
-        "balance": -113,
-        "pct": 0.06,
+        "meta": 105,
+        "balance": -98,
+        "pct": 0.07,
         "estado": "OBSERVADO",
         "accion": "RETENER PAGO"
       }
@@ -41,14 +41,20 @@
     {
       "month": "2026-01",
       "MARIA": 55,
+      "meta_MARIA": 50,
       "ANDER": 71,
-      "CRISTHIAN": 82
+      "meta_ANDER": 70,
+      "CRISTHIAN": 82,
+      "meta_CRISTHIAN": 80
     },
     {
       "month": "2026-02",
       "MARIA": 37,
-      "ANDER": 0,
-      "CRISTHIAN": 7
+      "meta_MARIA": 150,
+      "ANDER": 28,
+      "meta_ANDER": 107,
+      "CRISTHIAN": 7,
+      "meta_CRISTHIAN": 105
     }
   ]
 }

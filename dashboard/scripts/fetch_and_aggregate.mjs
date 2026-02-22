@@ -13,8 +13,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const CONFIG = JSON.parse(readFileSync(join(__dirname, 'config.json'), 'utf-8'));
 const DATA_PATH = join(__dirname, '..', 'public', 'data.json');
 
-const META = CONFIG.metaMensual;
 const TECNICO_KEYS = Object.keys(CONFIG.tecnicos);
+const METAS = CONFIG.metas; // { TECNICO: { "YYYY-MM": number } }
+
+function getMeta(tecnico, monthKey) {
+  return METAS[tecnico]?.[monthKey] ?? 0;
+}
 
 // ── Utilidades ────────────────────────────────────────────────────────────────
 
@@ -124,7 +128,10 @@ function processRows(rows) {
   const filteredMonths = desde ? sortedMonths.filter(mk => mk >= desde) : sortedMonths;
   const series = filteredMonths.map(mk => {
     const entry = { month: mk };
-    for (const t of TECNICO_KEYS) entry[t] = monthly[mk][t] ?? 0;
+    for (const t of TECNICO_KEYS) {
+      entry[t] = monthly[mk][t] ?? 0;
+      entry['meta_' + t] = getMeta(t, mk);
+    }
     return entry;
   });
 
@@ -134,13 +141,14 @@ function processRows(rows) {
 
   const tecnicos = TECNICO_KEYS.map(t => {
     const realizado = cur[t] ?? 0;
-    const balance = realizado - META;
-    const pct = Math.round((realizado / META) * 100) / 100;
-    const cumple = realizado >= META;
+    const meta = getMeta(t, currentMk);
+    const balance = realizado - meta;
+    const pct = meta > 0 ? Math.round((realizado / meta) * 100) / 100 : 0;
+    const cumple = meta > 0 && realizado >= meta;
     return {
       tecnico: t,
       realizado,
-      meta: META,
+      meta,
       balance,
       pct,
       estado: cumple ? 'PAGO OK' : 'OBSERVADO',
@@ -149,16 +157,17 @@ function processRows(rows) {
   });
 
   const total = tecnicos.reduce((s, t) => s + t.realizado, 0);
+  const totalMeta = tecnicos.reduce((s, t) => s + t.meta, 0);
 
   return {
     generatedAt: new Date().toISOString(),
-    metaMensual: META,
     currentMonth: currentMk,
     current: {
       mk: currentMk,
       total,
-      cumplidas: tecnicos.filter(t => t.realizado >= META).length,
-      noCumplidas: tecnicos.filter(t => t.realizado < META).length,
+      totalMeta,
+      cumplidas: tecnicos.filter(t => t.meta > 0 && t.realizado >= t.meta).length,
+      noCumplidas: tecnicos.filter(t => t.meta > 0 && t.realizado < t.meta).length,
       tecnicos,
     },
     series,
@@ -182,19 +191,25 @@ function handleFallback() {
   const now = new Date();
   const mk = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
 
+  const seedTecnicos = TECNICO_KEYS.map(t => {
+    const meta = getMeta(t, mk);
+    return {
+      tecnico: t, realizado: 0, meta, balance: -meta,
+      pct: 0, estado: 'OBSERVADO', accion: 'RETENER PAGO',
+    };
+  });
+  const totalMeta = seedTecnicos.reduce((s, t) => s + t.meta, 0);
+
   const seed = {
     generatedAt: now.toISOString(),
-    metaMensual: META,
     currentMonth: mk,
     current: {
       mk,
       total: 0,
+      totalMeta,
       cumplidas: 0,
-      noCumplidas: TECNICO_KEYS.length,
-      tecnicos: TECNICO_KEYS.map(t => ({
-        tecnico: t, realizado: 0, meta: META, balance: -META,
-        pct: 0, estado: 'OBSERVADO', accion: 'RETENER PAGO',
-      })),
+      noCumplidas: seedTecnicos.filter(t => t.meta > 0).length,
+      tecnicos: seedTecnicos,
     },
     series: [],
   };

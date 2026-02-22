@@ -1,6 +1,6 @@
 import { formatPct } from '../lib/format.js';
 
-export default function ProductionTable({ tecnicos, metaMensual }) {
+export default function ProductionTable({ tecnicos }) {
   return (
     <div className="table-container">
       <h2>Detalle de Produccion</h2>
@@ -21,7 +21,7 @@ export default function ProductionTable({ tecnicos, metaMensual }) {
             <tr key={t.tecnico}>
               <td><strong>{t.tecnico}</strong></td>
               <td>{t.realizado}</td>
-              <td>{metaMensual}</td>
+              <td>{t.meta}</td>
               <td style={{ color: t.balance >= 0 ? 'var(--success)' : 'var(--warning)' }}>
                 {t.balance >= 0 ? '+' : ''}{t.balance}
               </td>

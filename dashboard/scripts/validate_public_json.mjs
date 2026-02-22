@@ -1,9 +1,9 @@
 import fs from "node:fs";
 
-const allowedTop = new Set(["generatedAt", "metaMensual", "currentMonth", "current", "series"]);
-const allowedCurrent = new Set(["mk", "total", "cumplidas", "noCumplidas", "tecnicos"]);
+const allowedTop = new Set(["generatedAt", "currentMonth", "current", "series"]);
+const allowedCurrent = new Set(["mk", "total", "totalMeta", "cumplidas", "noCumplidas", "tecnicos"]);
 const allowedTecnico = new Set(["tecnico", "realizado", "meta", "balance", "pct", "estado", "accion"]);
-const allowedSeriesKeys = new Set(["month", "MARIA", "ANDER", "CRISTHIAN"]);
+const allowedSeriesKeys = new Set(["month", "MARIA", "ANDER", "CRISTHIAN", "meta_MARIA", "meta_ANDER", "meta_CRISTHIAN"]);
 
 const raw = fs.readFileSync("public/data.json", "utf-8");
 const data = JSON.parse(raw);

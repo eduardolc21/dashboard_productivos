@@ -3,7 +3,6 @@ import { loadDashboardData } from './lib/data.js';
 import { formatMonth } from './lib/format.js';
 import KPICards from './components/KPICards.jsx';
 import PerformanceChart from './components/PerformanceChart.jsx';
-import PaymentStatus from './components/PaymentStatus.jsx';
 import ProductionTable from './components/ProductionTable.jsx';
 
 export default function App() {
@@ -30,10 +29,9 @@ export default function App() {
         </p>
       </header>
 
-      <KPICards current={data.current} metaMensual={data.metaMensual} />
-      <PerformanceChart series={data.series} metaMensual={data.metaMensual} />
-      <PaymentStatus tecnicos={data.current.tecnicos} />
-      <ProductionTable tecnicos={data.current.tecnicos} metaMensual={data.metaMensual} />
+      <KPICards current={data.current} />
+      <PerformanceChart series={data.series} />
+      <ProductionTable tecnicos={data.current.tecnicos} />
     </div>
   );
 }
