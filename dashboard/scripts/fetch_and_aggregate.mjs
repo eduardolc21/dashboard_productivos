@@ -44,6 +44,45 @@ function mesTextoANumero(mesTexto) {
   return MONTH_MAP[normalize(mesTexto)] ?? null;
 }
 
+function parseServiceAccount(raw) {
+  const input = String(raw ?? '').trim();
+
+  if (!input) {
+    throw new Error('GSHEET_SERVICE_ACCOUNT_JSON esta vacio.');
+  }
+
+  const parseJson = value => {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  };
+
+  let credentials = parseJson(input);
+
+  if (!credentials) {
+    const decoded = Buffer.from(input, 'base64').toString('utf-8').trim();
+    credentials = parseJson(decoded);
+  }
+
+  if (!credentials || typeof credentials !== 'object') {
+    throw new Error(
+      'GSHEET_SERVICE_ACCOUNT_JSON no es JSON valido. Usa JSON plano o JSON en base64.'
+    );
+  }
+
+  if (typeof credentials.private_key === 'string') {
+    credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
+  }
+
+  if (!credentials.client_email || !credentials.private_key) {
+    throw new Error('Credenciales incompletas: faltan client_email/private_key en GSHEET_SERVICE_ACCOUNT_JSON.');
+  }
+
+  return credentials;
+}
+
 // ── Google Sheets ─────────────────────────────────────────────────────────────
 
 async function fetchFromSheets() {
@@ -51,9 +90,18 @@ async function fetchFromSheets() {
   const sheetId = process.env.GSHEET_ID;
   const range = process.env.GSHEET_RANGE;
 
-  if (!saJson || !sheetId || !range) return null;
+  const providedVars = [saJson, sheetId, range].filter(Boolean).length;
 
-  const credentials = JSON.parse(saJson);
+  if (providedVars === 0) return null;
+
+  if (providedVars < 3) {
+    throw new Error(
+      'Configuracion incompleta para sincronizar Google Sheets. ' +
+      'Define GSHEET_SERVICE_ACCOUNT_JSON, GSHEET_ID y GSHEET_RANGE.'
+    );
+  }
+
+  const credentials = parseServiceAccount(saJson);
   const auth = new google.auth.GoogleAuth({
     credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
@@ -61,8 +109,8 @@ async function fetchFromSheets() {
 
   const sheets = google.sheets({ version: 'v4', auth });
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: sheetId,
-    range,
+    spreadsheetId: String(sheetId).trim(),
+    range: String(range).trim(),
   });
 
   return res.data.values;
