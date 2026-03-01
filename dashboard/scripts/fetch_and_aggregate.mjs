@@ -15,6 +15,7 @@ const DATA_PATH = join(__dirname, '..', 'public', 'data.json');
 
 const TECNICO_KEYS = Object.keys(CONFIG.tecnicos);
 const METAS = CONFIG.metas; // { TECNICO: { "YYYY-MM": number } }
+const IS_GITHUB_ACTIONS = process.env.GITHUB_ACTIONS === 'true';
 
 function getMeta(tecnico, monthKey) {
   return METAS[tecnico]?.[monthKey] ?? 0;
@@ -29,7 +30,12 @@ const MONTH_MAP = {
 };
 
 function normalize(str) {
-  return String(str).trim().toUpperCase().replace(/\s+/g, ' ');
+  return String(str)
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/\s+/g, ' ');
 }
 
 function resolveTecnico(raw) {
@@ -41,7 +47,12 @@ function resolveTecnico(raw) {
 }
 
 function mesTextoANumero(mesTexto) {
-  return MONTH_MAP[normalize(mesTexto)] ?? null;
+  const mesNormalizado = normalize(mesTexto).replace(/[^A-Z]/g, '');
+  if (MONTH_MAP[mesNormalizado]) return MONTH_MAP[mesNormalizado];
+
+  // Corrige errores de digitación comunes por repetición de letras (ej. FEBREERO -> FEBRERO).
+  const mesConDuplicadosComprimidos = mesNormalizado.replace(/([A-Z])\1+/g, '$1');
+  return MONTH_MAP[mesConDuplicadosComprimidos] ?? null;
 }
 
 function parseServiceAccount(raw) {
@@ -92,7 +103,15 @@ async function fetchFromSheets() {
 
   const providedVars = [saJson, sheetId, range].filter(Boolean).length;
 
-  if (providedVars === 0) return null;
+  if (providedVars === 0) {
+    if (IS_GITHUB_ACTIONS) {
+      throw new Error(
+        'No se encontraron secretos de Google Sheets en GitHub Actions. ' +
+        'Configura GSHEET_SERVICE_ACCOUNT_JSON, GSHEET_ID y GSHEET_RANGE en Settings > Secrets and variables > Actions.'
+      );
+    }
+    return null;
+  }
 
   if (providedVars < 3) {
     throw new Error(
@@ -143,6 +162,13 @@ function processRows(rows) {
 
   // Acumular conteo: monthly["YYYY-MM"]["TECNICO"] = count
   const monthly = {};
+  const diagnostics = {
+    skippedMissingRequired: 0,
+    skippedInvalidMonth: 0,
+    skippedUnknownTecnico: 0,
+    invalidMonthSamples: new Set(),
+    unknownTecnicoSamples: new Set(),
+  };
 
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
@@ -150,14 +176,29 @@ function processRows(rows) {
     const rawMes = row[iMes];
     const rawExp = row[iExp];
 
-    if (!rawAno || !rawMes || !rawExp) continue;
+    if (!rawAno || !rawMes || !rawExp) {
+      diagnostics.skippedMissingRequired++;
+      continue;
+    }
 
     const ano = String(rawAno).trim();
     const mesNum = mesTextoANumero(rawMes);
-    if (!mesNum) continue;
+    if (!mesNum) {
+      diagnostics.skippedInvalidMonth++;
+      if (diagnostics.invalidMonthSamples.size < 5) {
+        diagnostics.invalidMonthSamples.add(String(rawMes).trim());
+      }
+      continue;
+    }
 
     const tecnico = resolveTecnico(rawExp);
-    if (!tecnico) continue;
+    if (!tecnico) {
+      diagnostics.skippedUnknownTecnico++;
+      if (diagnostics.unknownTecnicoSamples.size < 5) {
+        diagnostics.unknownTecnicoSamples.add(String(rawExp).trim());
+      }
+      continue;
+    }
 
     const mk = ano + '-' + mesNum;
     if (!monthly[mk]) {
@@ -168,6 +209,24 @@ function processRows(rows) {
 
   if (Object.keys(monthly).length === 0) {
     throw new Error('No se encontraron filas válidas con técnicos conocidos.');
+  }
+
+  const totalSkipped =
+    diagnostics.skippedMissingRequired +
+    diagnostics.skippedInvalidMonth +
+    diagnostics.skippedUnknownTecnico;
+
+  if (totalSkipped > 0) {
+    console.warn(
+      '[WARN] Filas omitidas durante la agregación:',
+      JSON.stringify({
+        skippedMissingRequired: diagnostics.skippedMissingRequired,
+        skippedInvalidMonth: diagnostics.skippedInvalidMonth,
+        skippedUnknownTecnico: diagnostics.skippedUnknownTecnico,
+        invalidMonthSamples: Array.from(diagnostics.invalidMonthSamples),
+        unknownTecnicoSamples: Array.from(diagnostics.unknownTecnicoSamples),
+      })
+    );
   }
 
   // Series ordenadas cronológicamente, filtradas por seriesDesde
