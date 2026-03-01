@@ -29,7 +29,12 @@ const MONTH_MAP = {
 };
 
 function normalize(str) {
-  return String(str).trim().toUpperCase().replace(/\s+/g, ' ');
+  return String(str)
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/\s+/g, ' ');
 }
 
 function resolveTecnico(raw) {
@@ -41,7 +46,12 @@ function resolveTecnico(raw) {
 }
 
 function mesTextoANumero(mesTexto) {
-  return MONTH_MAP[normalize(mesTexto)] ?? null;
+  const mesNormalizado = normalize(mesTexto).replace(/[^A-Z]/g, '');
+  if (MONTH_MAP[mesNormalizado]) return MONTH_MAP[mesNormalizado];
+
+  // Corrige errores de digitación comunes por repetición de letras (ej. FEBREERO -> FEBRERO).
+  const mesConDuplicadosComprimidos = mesNormalizado.replace(/([A-Z])\1+/g, '$1');
+  return MONTH_MAP[mesConDuplicadosComprimidos] ?? null;
 }
 
 function parseServiceAccount(raw) {
